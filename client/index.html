@@ -1,0 +1,123 @@
+<body>
+  <div class="row-fluid">
+    {{> index}}
+  </div>
+</body>
+
+<template name="index">
+  <div class="{{mainTableSize}}">
+    <h1>Inventarier</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Artikel</th>
+          <th>På båten</th>
+          <th>I Liljeholmen</th>
+          <th>Totalt</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each inventory}}
+        <tr class="article">
+          <td><input class="input-xlarge" type="text" data-attribute="name" value="{{name}}"/></td>
+          <td><input class="input-small" type="text" data-attribute="atBoat" value="{{atBoat}}"/></td>
+          <td><input class="input-small" type="text" data-attribute="atHome" value="{{atHome}}"/></td>
+          <td>{{total}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <button class="btn btn-primary" id="add">Lägg till artikel</button>
+    <h1>Service</h1>
+    {{> services}}
+  </div>
+  {{#if details}}
+  <div class="span6">
+    {{> details}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="details">
+  {{#with inventory}}
+  <h1>{{name}}</h1>
+  <form class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label">Namn</label>
+      <div class="controls">
+        <input class="inventory" type="text" data-attribute="name" value="{{name}}">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">På båten</label>
+      <div class="controls">
+        <input class="inventory input-small" type="text" data-attribute="atBoat" value="{{atBoat}}">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">I Liljeholmen</label>
+      <div class="controls">
+        <input class="inventory input-small" type="text" data-attribute="atHome" value="{{atHome}}">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Detaljer</label>
+      <div class="controls">
+        <textarea class="inventory input-xlarge" data-attribute="details">{{details}}</textarea>
+      </div>
+    </div>
+    {{/with}}
+  </form>
+    <h2>Service</h2>
+    <button class="btn btn-primary" id="add-service">Lägg till serviceåtgärd</button>
+    <h3>Planerad</h3>
+    {{#if upcomingServices.count}}
+    <table class="table">
+      <tbody>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Namn</th>
+            <th>Beskrivning</th>
+          </tr>
+        </thead>
+        {{#each upcomingServices}}
+        <tr>
+          <td><input id="complete-service input-xlarge" type="checkbox"/></td>
+          <td><input class="service input-xlarge" type="text" data-attribute="action" value="{{action}}"/></td>
+          <td><textarea class="service input-xlarge" data-attribute="description">{{description}}</textarea></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+    <h3>Utförd</h3>
+    <ul>
+    {{#each completedServices}}
+      <li>{{name}} - {{getDate completedAt}}</li>
+    {{/each}}
+    </ul>
+</template>
+
+<template name="services">
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Artikel</th>
+        <th>Åtgärd</th>
+        <th>Beskrivning</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each services}}
+      <tr>
+        <td><input type="checkbox"/></td>
+        <td>{{inventory.name}}</td>
+        <td>{{action}}</td>
+        <td>{{description}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
