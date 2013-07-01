@@ -14,6 +14,14 @@ function updateCollection(e, object, collection, ints) {
     collection.update(object._id, {$set : update});
 }
 
+function completeService(e, tmpl) {
+  Services.update(this._id, {$set : {
+      completedAt : Date.now(),
+      completed : true,
+    }
+  });
+}
+
 Template.index.helpers({
   details: function() {
     return Session.get('inventoryId');
@@ -79,7 +87,6 @@ Template.details.helpers({
     );
   }
 });
-
 Template.details.events({
   'click #close-details' : function(e, tmpl) {
     Session.set('inventoryId', null);
@@ -90,13 +97,7 @@ Template.details.events({
   'keyup .service': function(e, tmpl) {
     updateCollection(e, this, Services);
   },
-  'click #complete-service': function(e, tmpl) {
-    Services.update(this._id, {$set : {
-        completedAt : Date.now(),
-        completed : true,
-      }
-    });
-  },
+  'click .complete-service': completeService,
   'click #add-service': function(e, tmpl) {
     e.preventDefault();
     Services.insert({
@@ -119,4 +120,8 @@ Template.services.helpers({
     });
     return services;
   },
+});
+
+Template.services.events({
+  'click .complete-service': completeService,
 });
