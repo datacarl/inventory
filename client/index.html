@@ -16,6 +16,7 @@
 <template name="mainTable">
   <div class="{{mainTableSize}}">
     <h1>Inventarier</h1>
+    {{> search}}
     <table id="main-table" class="table">
       <thead>
         <tr>
@@ -42,9 +43,14 @@
   </div>
 </template>
 
+<template name="search">
+  <input type="text" id="search" placeholder="Sök"/>
+</template>
+
 <template name="details">
   {{#with inventory}}
   <h1>{{name}}</h1>
+  <button id="close-details" class="btn">Stäng detaljvy</button>
   <form class="form-horizontal">
     <div class="control-group">
       <label class="control-label">Namn</label>
@@ -81,13 +87,13 @@
         <thead>
           <tr>
             <th></th>
-            <th>Namn</th>
+            <th>Åtgärd</th>
             <th>Beskrivning</th>
           </tr>
         </thead>
         {{#each upcomingServices}}
         <tr>
-          <td><input id="complete-service input-xlarge" type="checkbox"/></td>
+          <td><input id="complete-service" type="checkbox"/></td>
           <td><input name="action" class="service input-xlarge" type="text" data-attribute="action" value="{{action}}"/></td>
           <td><textarea name="description" class="service input-xlarge" data-attribute="description">{{description}}</textarea></td>
         </tr>
@@ -98,7 +104,7 @@
     <h3>Utförd</h3>
     <ul>
     {{#each completedServices}}
-      <li>{{name}} - {{getDate completedAt}}</li>
+      <li>{{action}} - {{getDate completedAt}}</li>
     {{/each}}
     </ul>
 </template>

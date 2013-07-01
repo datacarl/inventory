@@ -1,5 +1,4 @@
 function updateCollection(e, object, collection, ints) {
-    console.log(e, object, collection, ints);
     var target = e.target,
         value = target.value,
         attribute = target.attributes['data-attribute'].value,
@@ -22,7 +21,9 @@ Template.index.helpers({
 });
 
 Template.mainTable.helpers({
-  inventory: function() { return Inventory.find(); },
+  inventory: function() {
+    return Inventory.find({name : {$regex : Session.get('search'), $options : 'i'}});
+  },
   mainTableSize: function() {
     return Session.get('inventoryId') ? 'span6' : 'span12';
   },
@@ -30,7 +31,6 @@ Template.mainTable.helpers({
 
 Template.mainTable.events({
   'keyup input': function(e, tmpl) {
-      console.log('here');
     updateCollection(e, this, Inventory, ['atBoat', 'atHome']);
   },
   'click #add': function(e, tmpl) {
@@ -46,6 +46,12 @@ Template.mainTable.events({
   },
   'click tr.article': function(e, tmpl) {
     Session.set('inventoryId', this._id);
+  },
+});
+
+Template.search.events({
+  'keyup #search' : function(e, tmpl) {
+    Session.set('search', e.target.value);
   },
 });
 
@@ -75,6 +81,9 @@ Template.details.helpers({
 });
 
 Template.details.events({
+  'click #close-details' : function(e, tmpl) {
+    Session.set('inventoryId', null);
+  },
   'keyup .inventory': function(e, tmpl) {
     updateCollection(e, this, Inventory, ['atBoat', 'atHome']);
   },
