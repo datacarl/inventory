@@ -53,7 +53,10 @@ Template.mainTable.events({
     });
   },
   'click tr.article': function(e, tmpl) {
-    Session.set('inventoryId', this._id);
+    // Dont trigger on input fields, only on tr.
+    if (e.srcElement.tagName !== 'INPUT') {
+      Session.set('inventoryId', this._id);
+    }
   },
 });
 
