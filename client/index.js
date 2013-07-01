@@ -1,4 +1,5 @@
 function updateCollection(e, object, collection, ints) {
+    console.log(e, object, collection, ints);
     var target = e.target,
         value = target.value,
         attribute = target.attributes['data-attribute'].value,
@@ -15,18 +16,21 @@ function updateCollection(e, object, collection, ints) {
 }
 
 Template.index.helpers({
-  inventory: function() { return Inventory.find(); },
-  mainTableSize: function() {
-    return Session.get('inventory') ? 'span6' : 'span12';
-  },
   details: function() {
-    return Session.get('inventory');
+    return Session.get('inventoryId');
   }
-
 });
 
-Template.index.events({
+Template.mainTable.helpers({
+  inventory: function() { return Inventory.find(); },
+  mainTableSize: function() {
+    return Session.get('inventoryId') ? 'span6' : 'span12';
+  },
+});
+
+Template.mainTable.events({
   'keyup input': function(e, tmpl) {
+      console.log('here');
     updateCollection(e, this, Inventory, ['atBoat', 'atHome']);
   },
   'click #add': function(e, tmpl) {
@@ -41,23 +45,23 @@ Template.index.events({
     });
   },
   'click tr.article': function(e, tmpl) {
-    Session.set('inventory', this);
+    Session.set('inventoryId', this._id);
   },
 });
 
 Template.details.helpers({
   inventory: function() {
-    return Session.get('inventory');
+    return Inventory.findOne(Session.get('inventoryId'));
   },
   upcomingServices: function() {
     return Services.find({
-      inventoryId: Session.get('inventory')._id,
+      inventoryId: Session.get('inventoryId'),
       completed: false,
     });
   },
   completedServices: function() {
     return Services.find({
-        inventoryId: Session.get('inventory')._id,
+        inventoryId: Session.get('inventoryId'),
         completed: true,
       },
       {
@@ -87,7 +91,7 @@ Template.details.events({
   'click #add-service': function(e, tmpl) {
     e.preventDefault();
     Services.insert({
-      inventoryId : Session.get('inventory')._id,
+      inventoryId : Session.get('inventoryId'),
       completed : false,
       createdAt : Date.now(),
       action : '',
@@ -98,8 +102,12 @@ Template.details.events({
 
 Template.services.helpers({
   services: function() {
-    return Services.find({
+    var services = Services.find({
       completed: false,
-    })
+    }).fetch();
+    _.each(services, function(service) {
+      service.inventory = Inventory.findOne(service.inventoryId);
+    });
+    return services;
   },
 });

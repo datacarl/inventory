@@ -5,9 +5,18 @@
 </body>
 
 <template name="index">
+  {{> mainTable}}
+  {{#if details}}
+  <div id="inventory-details" class="span6">
+    {{> details}}
+  </div>
+  {{/if}}
+</template>
+
+<template name="mainTable">
   <div class="{{mainTableSize}}">
     <h1>Inventarier</h1>
-    <table class="table">
+    <table id="main-table" class="table">
       <thead>
         <tr>
           <th>Artikel</th>
@@ -19,9 +28,9 @@
       <tbody>
         {{#each inventory}}
         <tr class="article">
-          <td><input class="input-xlarge" type="text" data-attribute="name" value="{{name}}"/></td>
-          <td><input class="input-small" type="text" data-attribute="atBoat" value="{{atBoat}}"/></td>
-          <td><input class="input-small" type="text" data-attribute="atHome" value="{{atHome}}"/></td>
+          <td><input class="input-xlarge" name="name" type="text" data-attribute="name" value="{{name}}"/></td>
+          <td><input class="input-small" name="at-boat" type="text" data-attribute="atBoat" value="{{atBoat}}"/></td>
+          <td><input class="input-small" name="at-home" type="text" data-attribute="atHome" value="{{atHome}}"/></td>
           <td>{{total}}</td>
         </tr>
         {{/each}}
@@ -31,11 +40,6 @@
     <h1>Service</h1>
     {{> services}}
   </div>
-  {{#if details}}
-  <div class="span6">
-    {{> details}}
-  </div>
-  {{/if}}
 </template>
 
 <template name="details">
@@ -45,25 +49,25 @@
     <div class="control-group">
       <label class="control-label">Namn</label>
       <div class="controls">
-        <input class="inventory" type="text" data-attribute="name" value="{{name}}">
+        <input name="name" class="inventory" type="text" data-attribute="name" value="{{name}}">
       </div>
     </div>
     <div class="control-group">
       <label class="control-label">På båten</label>
       <div class="controls">
-        <input class="inventory input-small" type="text" data-attribute="atBoat" value="{{atBoat}}">
+        <input name="at-boat" class="inventory input-small" type="text" data-attribute="atBoat" value="{{atBoat}}">
       </div>
     </div>
     <div class="control-group">
       <label class="control-label">I Liljeholmen</label>
       <div class="controls">
-        <input class="inventory input-small" type="text" data-attribute="atHome" value="{{atHome}}">
+        <input name="at-home" class="inventory input-small" type="text" data-attribute="atHome" value="{{atHome}}">
       </div>
     </div>
     <div class="control-group">
       <label class="control-label">Detaljer</label>
       <div class="controls">
-        <textarea class="inventory input-xlarge" data-attribute="details">{{details}}</textarea>
+        <textarea name="details" class="inventory input-xlarge" data-attribute="details">{{details}}</textarea>
       </div>
     </div>
     {{/with}}
@@ -84,8 +88,8 @@
         {{#each upcomingServices}}
         <tr>
           <td><input id="complete-service input-xlarge" type="checkbox"/></td>
-          <td><input class="service input-xlarge" type="text" data-attribute="action" value="{{action}}"/></td>
-          <td><textarea class="service input-xlarge" data-attribute="description">{{description}}</textarea></td>
+          <td><input name="action" class="service input-xlarge" type="text" data-attribute="action" value="{{action}}"/></td>
+          <td><textarea name="description" class="service input-xlarge" data-attribute="description">{{description}}</textarea></td>
         </tr>
         {{/each}}
       </tbody>
